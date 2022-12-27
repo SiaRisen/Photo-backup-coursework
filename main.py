@@ -13,7 +13,7 @@ def get_photo_json():
     all_photos = user_vk.search_photo_profile()
     photos_list = []
     for items in all_photos:
-        photos_dict = {"file_name": (str(items['likes']['count']) + "-" + str(items['date']) + ".jpg"),
+        photos_dict = {"file_name": (str(items['likes']['count']) + "-" + time.strftime('%Y-%m-%d', time.gmtime(items["date"])) + ".jpg"),
                        "size": items['sizes'][-1]['type'], "url": items['sizes'][-1]['url']}
         photos_list.append(photos_dict)
     photo_json = json.dumps(photos_list, indent=4)
