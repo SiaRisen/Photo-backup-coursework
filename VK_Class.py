@@ -1,4 +1,5 @@
 import requests
+import time
 
 
 class VkUser:
@@ -21,7 +22,7 @@ class VkUser:
 
     def parse_size_photo(self):
         photos = self.search_photo_profile()
-        max_size = {(str(items["likes"]["count"]) + "-" +
-                     str(items["date"])): items["sizes"][-1]["url"] for items in photos}
+        max_size = {(str(items["likes"]["count"]) + "_" +
+                time.strftime('%Y-%m-%d', time.gmtime(items["date"]))): items["sizes"][-1]["url"] for items in photos}
         print(max_size)
         return max_size
