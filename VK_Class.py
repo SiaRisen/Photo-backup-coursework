@@ -1,5 +1,6 @@
 import requests
 import time
+import json
 
 
 class VkUser:
@@ -22,7 +23,21 @@ class VkUser:
 
     def parse_size_photo(self):
         photos = self.search_photo_profile()
-        max_size = {(str(items["likes"]["count"]) + "_" +
-                time.strftime('%Y-%m-%d', time.gmtime(items["date"]))): items["sizes"][-1]["url"] for items in photos}
+        max_size = {(str(items["likes"]["count"]) + "_" + time.strftime('%Y-%m-%d', time.gmtime(items["date"]))):
+                    items["sizes"][-1]["url"] for items in photos}
         print(max_size)
         return max_size
+
+    def get_photo_json(self):
+        all_photos = self.search_photo_profile()
+        photos_list = []
+        for items in all_photos:
+            photos_dict = {
+                "file_name": (str(items['likes']['count']) + "-"
+                              + time.strftime('%Y-%m-%d', time.gmtime(items["date"])) + ".jpg"),
+                "size": items['sizes'][-1]['type'], "url": items['sizes'][-1]['url']}
+            photos_list.append(photos_dict)
+        photo_json = json.dumps(photos_list, indent=4)
+        with open("photos.json", "w") as file:
+            file.write(photo_json)
+        print("Информация о фото записана в json-файл")

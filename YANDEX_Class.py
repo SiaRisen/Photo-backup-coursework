@@ -18,6 +18,8 @@ class YaUploader:
             print(f"Папка {path_folder} создана.")
         else:
             response.raise_for_status()
+            if response.status_code == 409:
+                print(f"Папка {path_folder} уже существует! Введите другое название.")
 
     def get_link_to_disk(self, disk_file_path):
         upload_url = "https://cloud-api.yandex.net/v1/disk/resources/upload"
@@ -31,7 +33,7 @@ class YaUploader:
 
         headers = self.get_headers()
         params = {"url": photo_url}
-        response = requests.put(href, headers=headers, params=params)
+        response = requests.post(href, headers=headers, params=params)
         response.raise_for_status()
         if response.status_code == 201:
             print("Загрузка файла(-ов) завершена")
